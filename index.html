@@ -1,52 +1,449 @@
-<!-- ... (bagian head, style, landing page sama seperti sebelumnya) ... -->
-
-<script>
-    // === GANTI HANYA BAGIAN INI SESUAI METODE YANG KAMU PILIH ===
-    const PROXY_BASE = 'https://corsproxy.io/?';                    // pilihan 4 (paling cepat dicoba)
-    // const PROXY_BASE = 'https://api.allorigins.win/raw?url=';    // pilihan 5
-    // const PROXY_BASE = 'https://api.codetabs.com/v1/proxy?quest='; // alternatif lain
-    // const PROXY_BASE = 'https://my-own-proxy.vercel.app/api/proxy?url='; // kalau kamu bikin sendiri
-
-    function makeProxyUrl(originalUrl) {
-        return PROXY_BASE + encodeURIComponent(originalUrl);
-    }
-
-    // Fungsi umum untuk fetch JSON
-    async function tryJsonApi(originalUrl, resDiv) {
-        resDiv.innerHTML = 'Memuat...';
-        try {
-            const proxyUrl = makeProxyUrl(originalUrl);
-            const res = await fetch(proxyUrl);
-            if (!res.ok) throw new Error(`Status ${res.status}`);
-            const data = await res.json();
-            resDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
-        } catch (err) {
-            resDiv.innerHTML = `Gagal: ${err.message}\n\nCoba ganti proxy atau cek koneksi.`;
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Apisaurus API Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #7B2CBF;
+            --accent: #9D4EDD;
+            --light: #E0AAFF;
+            --bg-gradient: linear-gradient(135deg, #240046 0%, #3C096C 50%, #7B2CBF 100%);
         }
-    }
 
-    // Fungsi untuk gambar (IQC & AnimeHalal)
-    function showImage(originalUrl, resDiv) {
-        resDiv.innerHTML = 'Memuat gambar...';
-        const proxyUrl = makeProxyUrl(originalUrl);
-        resDiv.innerHTML = `<img src="${proxyUrl}" alt="Generated" onerror="this.outerHTML='<p>Gagal memuat gambar (coba proxy lain)</p>'">`;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
 
-    // Contoh pemanggilan (sesuaikan dengan id masing-masing card)
-    function tryCekWaktu() {
-        tryJsonApi('https://apisaurus.vercel.app/api/cekwaktu', document.getElementById('response-cekwaktu'));
-    }
+        body {
+            background: var(--bg-gradient);
+            color: #ffffff;
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
 
-    function tryCekNamaPasaran() {
-        const nama = document.getElementById('nama-pasaran').value.trim();
-        if (!nama) return alert('Isi nama dulu!');
-        const url = `https://apisaurus.vercel.app/api/random/ceknamapasaran?apikey=saurusdev&nama=${encodeURIComponent(nama)}`;
-        tryJsonApi(url, document.getElementById('response-pasaran'));
-    }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-    function tryAnimeHalal() {
-        showImage('https://apisaurus.vercel.app/api/animehalal', document.getElementById('response-animehalal'));
-    }
+        #landing {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 1.5s ease-in-out;
+        }
 
-    // ... buat fungsi lainnya mirip pola di atas ...
-</script>
+        #landing h1 {
+            font-size: 4.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #E0AAFF, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #landing .author {
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        #landing .total-api {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.8;
+        }
+
+        .btn-start {
+            padding: 16px 50px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(157, 78, 221, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(157, 78, 221, 0.7);
+        }
+
+        #dashboard {
+            display: none;
+            min-height: 100vh;
+            padding-top: 60px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h2 {
+            font-size: 3.2rem;
+            margin-bottom: 10px;
+        }
+
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 30px;
+        }
+
+        .api-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .api-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 45px rgba(123, 44, 191, 0.35);
+        }
+
+        .api-card h3 {
+            font-size: 1.9rem;
+            margin-bottom: 15px;
+            color: var(--light);
+        }
+
+        .form-group {
+            margin: 15px 0;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #a166f0;
+            transform: scale(1.05);
+        }
+
+        .response {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .response img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 12px;
+        }
+
+        .log-container {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #ccc;
+        }
+
+        .log-container button {
+            margin-top: 8px;
+            padding: 6px 12px;
+            background: #555;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stars {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: twinkle 5s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            from { opacity: 0.3; }
+            to { opacity: 0.9; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars" id="stars"></div>
+
+    <!-- Landing Page -->
+    <section id="landing">
+        <div class="container">
+            <p class="author">Author: Saurus</p>
+            <p class="total-api">Total API: 5 (Cek Waktu • Cek Nama Pasaran • IQC • Cari Grup WA • Anime Halal)</p>
+            <h1>Apisaurus</h1>
+            <p style="font-size: 1.4rem; margin: 20px 0 40px;">Koleksi API keren & gratis untuk developer</p>
+            <button class="btn-start" onclick="startDashboard()">Let's Get Started</button>
+        </div>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="dashboard">
+        <div class="container">
+            <div class="header">
+                <h2>Dashboard API</h2>
+                <p style="opacity: 0.8;">Semua API bisa dicoba langsung (pastikan CORS aktif di server)</p>
+            </div>
+
+            <div class="api-grid">
+
+                <!-- Cek Waktu -->
+                <div class="api-card">
+                    <h3>🕐 Cek Waktu</h3>
+                    <button class="btn" onclick="tryCekWaktu()">Coba API</button>
+                    <div id="response-cekwaktu" class="response"></div>
+                    <div id="log-cekwaktu" class="log-container"></div>
+                </div>
+
+                <!-- Cek Nama Pasaran -->
+                <div class="api-card">
+                    <h3>🔥 Cek Nama Pasaran</h3>
+                    <div class="form-group">
+                        <label>API Key</label>
+                        <input type="text" id="apikey-pasaran" value="saurusdev">
+                    </div>
+                    <div class="form-group">
+                        <label>Nama</label>
+                        <input type="text" id="nama-pasaran" placeholder="Masukkan nama...">
+                    </div>
+                    <button class="btn" onclick="tryCekNamaPasaran()">Coba API</button>
+                    <div id="response-pasaran" class="response"></div>
+                    <div id="log-pasaran" class="log-container"></div>
+                </div>
+
+                <!-- IQC -->
+                <div class="api-card">
+                    <h3>🖼️ IQC (Image Quote Card)</h3>
+                    <div class="form-group"><label>API Key</label><input id="apikey-iqc" value="saurusdev"></div>
+                    <div class="form-group"><label>Waktu (HH:MM)</label><input id="time-iqc" placeholder="13:20"></div>
+                    <div class="form-group"><label>Baterai (%)</label><input id="battery-iqc" placeholder="85"></div>
+                    <div class="form-group"><label>Pesan</label><input id="message-iqc" placeholder="Halo dunia!"></div>
+                    <button class="btn" onclick="tryIQC()">Generate Gambar</button>
+                    <div id="response-iqc" class="response"></div>
+                    <div id="log-iqc" class="log-container"></div>
+                </div>
+
+                <!-- Cari Grup WA -->
+                <div class="api-card">
+                    <h3>💬 Cari Grup WhatsApp</h3>
+                    <div class="form-group"><label>API Key</label><input id="apikey-grupwa" value="saurusdev"></div>
+                    <div class="form-group"><label>Query</label><input id="query-grupwa" placeholder="jb, ml, ff"></div>
+                    <button class="btn" onclick="tryGrupWA()">Coba API</button>
+                    <div id="response-grupwa" class="response"></div>
+                    <div id="log-grupwa" class="log-container"></div>
+                </div>
+
+                <!-- Anime Halal -->
+                <div class="api-card">
+                    <h3>🐱 Anime Halal</h3>
+                    <div class="form-group"><label>API Key (opsional)</label><input id="apikey-anime" value="saurusdev"></div>
+                    <button class="btn" onclick="tryAnimeHalal()">Generate Anime</button>
+                    <div id="response-anime" class="response"></div>
+                    <div id="log-anime" class="log-container"></div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Bintang background
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 180; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                const size = Math.random() * 3 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                starsContainer.appendChild(star);
+            }
+        }
+        createStars();
+
+        function startDashboard() {
+            document.getElementById('landing').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        // Fungsi umum untuk log ke console + tampil di halaman
+        function logToConsoleAndPage(message, logElementId) {
+            console.log(message);
+            const logDiv = document.getElementById(logElementId);
+            logDiv.innerHTML = `<strong>Console Log:</strong><br><pre>${message}</pre>` +
+                               '<button onclick="copyLog(this)">Copy Log</button>';
+        }
+
+        function copyLog(btn) {
+            const text = btn.parentElement.querySelector('pre').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                btn.innerText = 'Copied!';
+                setTimeout(() => btn.innerText = 'Copy Log', 2000);
+            });
+        }
+
+        // Cek Waktu
+        async function tryCekWaktu() {
+            const div = document.getElementById('response-cekwaktu');
+            div.innerHTML = 'Loading...';
+            try {
+                const res = await fetch('https://apisaurus.vercel.app/api/cekwaktu');
+                const data = await res.json();
+                div.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                logToConsoleAndPage('Success Cek Waktu: ' + JSON.stringify(data, null, 2), 'log-cekwaktu');
+            } catch (err) {
+                div.innerHTML = 'Error: ' + err.message;
+                logToConsoleAndPage('Error Cek Waktu: ' + err.message, 'log-cekwaktu');
+            }
+        }
+
+        // Cek Nama Pasaran
+        async function tryCekNamaPasaran() {
+            const apikey = document.getElementById('apikey-pasaran').value.trim();
+            const nama = document.getElementById('nama-pasaran').value.trim();
+            const div = document.getElementById('response-pasaran');
+
+            if (!nama) {
+                div.innerHTML = '⚠️ Isi nama terlebih dahulu!';
+                return;
+            }
+
+            div.innerHTML = 'Loading...';
+
+            const url = `https://apisaurus.vercel.app/api/random/ceknamapasaran?apikey=${apikey}&nama=${encodeURIComponent(nama)}`;
+
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                div.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                logToConsoleAndPage('Success Pasaran: ' + JSON.stringify(data, null, 2), 'log-pasaran');
+            } catch (err) {
+                div.innerHTML = 'Error: ' + err.message;
+                logToConsoleAndPage('Error Pasaran: ' + err.message + '\nURL: ' + url, 'log-pasaran');
+            }
+        }
+
+        // IQC
+        function tryIQC() {
+            const apikey = document.getElementById('apikey-iqc').value.trim();
+            const time = document.getElementById('time-iqc').value.trim();
+            const battery = document.getElementById('battery-iqc').value.trim();
+            const message = document.getElementById('message-iqc').value.trim();
+            const div = document.getElementById('response-iqc');
+
+            if (!time || !battery || !message) {
+                div.innerHTML = '⚠️ Lengkapi semua field!';
+                return;
+            }
+
+            const url = `https://apisaurus.vercel.app/api/iqc?apikey=${apikey}&time=${time}&battery=${battery}&message=${encodeURIComponent(message)}`;
+
+            div.innerHTML = `<img src="${url}" alt="IQC Image" onerror="this.outerHTML='<p>Gagal load gambar</p>'">`;
+            logToConsoleAndPage('IQC requested: ' + url, 'log-iqc');
+        }
+
+        // Grup WA
+        async function tryGrupWA() {
+            const apikey = document.getElementById('apikey-grupwa').value.trim();
+            const query = document.getElementById('query-grupwa').value.trim();
+            const div = document.getElementById('response-grupwa');
+
+            if (!query) {
+                div.innerHTML = '⚠️ Isi query pencarian!';
+                return;
+            }
+
+            div.innerHTML = 'Loading...';
+
+            const url = `https://apisaurus.vercel.app/api/grupwa?apikey=${apikey}&query=${encodeURIComponent(query)}`;
+
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                div.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                logToConsoleAndPage('Success Grup WA: ' + JSON.stringify(data, null, 2), 'log-grupwa');
+            } catch (err) {
+                div.innerHTML = 'Error: ' + err.message;
+                logToConsoleAndPage('Error Grup WA: ' + err.message + '\nURL: ' + url, 'log-grupwa');
+            }
+        }
+
+        // Anime Halal
+        function tryAnimeHalal() {
+            const apikey = document.getElementById('apikey-anime').value.trim();
+            const div = document.getElementById('response-anime');
+            let url = 'https://apisaurus.vercel.app/api/animehalal';
+            if (apikey) url += `?apikey=${apikey}`;
+
+            div.innerHTML = `<img src="${url}" alt="Anime Halal" onerror="this.outerHTML='<p>Gagal load gambar</p>'">`;
+            logToConsoleAndPage('Anime Halal requested: ' + url, 'log-anime');
+        }
+    </script>
+</body>
+</html>
