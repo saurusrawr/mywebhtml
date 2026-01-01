@@ -3,447 +3,285 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Apisaurus API Dashboard</title>
+    <title>Apisaurus - Anime Halal Edition</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-        
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@400;600&display=swap');
+
         :root {
-            --primary: #7B2CBF;
-            --accent: #9D4EDD;
-            --light: #E0AAFF;
-            --bg-gradient: linear-gradient(135deg, #240046 0%, #3C096C 50%, #7B2CBF 100%);
+            --bg: #0f001a;
+            --primary: #9d4edd;
+            --accent: #c084fc;
+            --light: #e9d5ff;
+            --dark: #1a0033;
+            --glow: 0 0 20px rgba(157,78,221,0.6);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; }
 
         body {
-            background: var(--bg-gradient);
-            color: #ffffff;
+            background: linear-gradient(135deg, #0f001a 0%, #240046 50%, #3c096c 100%);
+            color: var(--light);
+            font-family: 'Poppins', sans-serif;
             min-height: 100vh;
             background-attachment: fixed;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+        .stars, .nebula { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:-1; }
+        .star { position:absolute; background:white; border-radius:50%; animation:twinkle 6s infinite alternate; }
+        .nebula {
+            background: radial-gradient(circle at 30% 70%, rgba(157,78,221,0.12) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 30%, rgba(192,132,252,0.08) 0%, transparent 60%);
+            opacity:0.7;
         }
+        @keyframes twinkle { 0%,100% {opacity:0.4; transform:scale(1);} 50% {opacity:0.9; transform:scale(1.2);} }
 
-        #landing {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            animation: fadeIn 1.5s ease-in-out;
-        }
+        .container { max-width:1280px; margin:0 auto; padding:20px; }
 
+        #landing { height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
         #landing h1 {
-            font-size: 4.5rem;
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, #E0AAFF, #ffffff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-family:'Orbitron',sans-serif; font-size:5.5rem;
+            background:linear-gradient(90deg,#c084fc,#e9d5ff,#9d4edd);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+            margin-bottom:20px; text-shadow:var(--glow);
         }
-
-        #landing .author {
-            font-size: 1.6rem;
-            margin-bottom: 10px;
-            opacity: 0.9;
+        .subtitle { font-size:1.6rem; opacity:0.9; margin:15px 0; }
+        .btn-big {
+            padding:18px 50px; font-size:1.5rem; font-weight:600;
+            background:linear-gradient(45deg,#9d4edd,#c084fc); color:white; border:none;
+            border-radius:50px; cursor:pointer; box-shadow:var(--glow);
+            transition:all 0.4s; margin-top:30px;
         }
+        .btn-big:hover { transform:translateY(-8px) scale(1.05); box-shadow:0 0 40px rgba(157,78,221,0.7); }
 
-        #landing .total-api {
-            font-size: 1.3rem;
-            margin-bottom: 40px;
-            opacity: 0.8;
-        }
-
-        .btn-start {
-            padding: 16px 50px;
-            font-size: 1.5rem;
-            font-weight: 600;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(157, 78, 221, 0.5);
-            transition: all 0.3s ease;
-        }
-
-        .btn-start:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(157, 78, 221, 0.7);
-        }
-
-        #dashboard {
-            display: none;
-            min-height: 100vh;
-            padding-top: 60px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
+        #dashboard { display:none; padding:60px 0; }
+        .header { text-align:center; margin-bottom:60px; }
         .header h2 {
-            font-size: 3.2rem;
-            margin-bottom: 10px;
+            font-family:'Orbitron',sans-serif; font-size:3.8rem;
+            background:linear-gradient(90deg,#c084fc,#e9d5ff);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
         }
 
-        .api-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-            gap: 30px;
-        }
+        .api-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(380px,1fr)); gap:30px; }
 
         .api-card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 30px;
-            border: 1px solid rgba(157, 78, 221, 0.3);
-            transition: all 0.3s ease;
+            background:rgba(36,0,51,0.35); backdrop-filter:blur(12px);
+            border:1px solid rgba(157,78,221,0.3); border-radius:24px; padding:32px;
+            transition:all 0.4s; position:relative; overflow:hidden;
         }
+        .api-card:hover { transform:translateY(-12px); box-shadow:var(--glow); }
 
-        .api-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 45px rgba(123, 44, 191, 0.35);
-        }
+        .api-card h3 { font-family:'Orbitron',sans-serif; color:var(--accent); font-size:1.9rem; margin-bottom:16px; }
 
-        .api-card h3 {
-            font-size: 1.9rem;
-            margin-bottom: 15px;
-            color: var(--light);
-        }
-
-        .form-group {
-            margin: 15px 0;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
+        .form-group { margin:18px 0; }
+        .form-group label { display:block; margin-bottom:8px; font-weight:500; color:var(--accent); }
         .form-group input {
-            width: 100%;
-            padding: 12px 16px;
-            border-radius: 10px;
-            border: none;
-            background: rgba(255, 255, 255, 0.12);
-            color: white;
-            font-size: 1rem;
+            width:100%; padding:14px; border-radius:12px; border:1px solid rgba(157,78,221,0.4);
+            background:rgba(255,255,255,0.05); color:white; font-size:1rem;
         }
 
         .btn {
-            padding: 12px 28px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s;
-            margin-top: 10px;
+            padding:12px 28px; background:linear-gradient(45deg,#9d4edd,#c084fc); color:white;
+            border:none; border-radius:12px; cursor:pointer; font-weight:600;
+            transition:all 0.3s; margin-top:12px;
         }
-
-        .btn:hover {
-            background: #a166f0;
-            transform: scale(1.05);
-        }
+        .btn:hover { transform:scale(1.06); box-shadow:0 0 20px rgba(157,78,221,0.5); }
 
         .response {
-            margin-top: 20px;
-            padding: 16px;
-            background: rgba(0, 0, 0, 0.35);
-            border-radius: 12px;
-            max-height: 400px;
-            overflow-y: auto;
-            font-family: monospace;
-            white-space: pre-wrap;
-            word-break: break-all;
+            margin-top:24px; padding:20px; background:rgba(0,0,0,0.45); border-radius:16px;
+            font-family:monospace; white-space:pre-wrap; max-height:400px; overflow-y:auto;
+            border:1px solid rgba(192,132,252,0.2);
+        }
+        .response img { 
+            max-width:100%; 
+            border-radius:12px; 
+            margin-top:12px; 
+            box-shadow:0 0 15px rgba(192,132,252,0.4);
+            background:#000;
         }
 
-        .response img {
-            max-width: 100%;
-            border-radius: 10px;
-            margin-top: 12px;
-        }
-
-        .log-container {
-            margin-top: 15px;
-            padding: 10px;
-            background: rgba(0,0,0,0.5);
-            border-radius: 8px;
-            font-size: 0.85rem;
-            color: #ccc;
-        }
-
-        .log-container button {
-            margin-top: 8px;
-            padding: 6px 12px;
-            background: #555;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .stars {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.8;
-            animation: twinkle 5s infinite alternate;
-        }
-
-        @keyframes twinkle {
-            from { opacity: 0.3; }
-            to { opacity: 0.9; }
-        }
+        .loading { color:var(--accent); font-style:italic; animation:pulse 1.5s infinite; }
+        @keyframes pulse { 0%,100% {opacity:1;} 50% {opacity:0.6;} }
     </style>
 </head>
 <body>
 
-    <div class="stars" id="stars"></div>
+<div class="stars" id="stars"></div>
+<div class="nebula"></div>
 
-    <!-- Landing Page -->
-    <section id="landing">
-        <div class="container">
-            <p class="author">Author: Saurus</p>
-            <p class="total-api">Total API: 5 (Cek Waktu • Cek Nama Pasaran • IQC • Cari Grup WA • Anime Halal)</p>
-            <h1>Apisaurus</h1>
-            <p style="font-size: 1.4rem; margin: 20px 0 40px;">Koleksi API keren & gratis untuk developer</p>
-            <button class="btn-start" onclick="startDashboard()">Let's Get Started</button>
+<!-- LANDING -->
+<section id="landing">
+    <div class="container">
+        <p style="font-size:1.4rem; opacity:0.8;">Author: Saurus • Anime Halal Mode</p>
+        <h1>Apisaurus</h1>
+        <p class="subtitle">Koleksi API + Anime Halal (langsung tanpa parameter!)</p>
+        <button class="btn-big" onclick="startDashboard()">Let's Get Started</button>
+    </div>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dashboard">
+    <div class="container">
+        <div class="header">
+            <h2>API Dashboard</h2>
+            <p>Semua API termasuk Anime Halal tanpa query apapun</p>
         </div>
-    </section>
 
-    <!-- Dashboard -->
-    <section id="dashboard">
-        <div class="container">
-            <div class="header">
-                <h2>Dashboard API</h2>
-                <p style="opacity: 0.8;">Semua API bisa dicoba langsung (pastikan CORS aktif di server)</p>
+        <div class="api-grid">
+
+            <!-- Cek Waktu -->
+            <div class="api-card">
+                <h3>🕒 Cek Waktu</h3>
+                <div class="api-url">https://apisaurus.vercel.app/api/cekwaktu</div>
+                <button class="btn" onclick="tryApi('cekwaktu')">Coba API</button>
+                <div id="response-cekwaktu" class="response"></div>
             </div>
 
-            <div class="api-grid">
-
-                <!-- Cek Waktu -->
-                <div class="api-card">
-                    <h3>🕐 Cek Waktu</h3>
-                    <button class="btn" onclick="tryCekWaktu()">Coba API</button>
-                    <div id="response-cekwaktu" class="response"></div>
-                    <div id="log-cekwaktu" class="log-container"></div>
-                </div>
-
-                <!-- Cek Nama Pasaran -->
-                <div class="api-card">
-                    <h3>🔥 Cek Nama Pasaran</h3>
-                    <div class="form-group">
-                        <label>API Key</label>
-                        <input type="text" id="apikey-pasaran" value="saurusdev">
-                    </div>
-                    <div class="form-group">
-                        <label>Nama</label>
-                        <input type="text" id="nama-pasaran" placeholder="Masukkan nama...">
-                    </div>
-                    <button class="btn" onclick="tryCekNamaPasaran()">Coba API</button>
-                    <div id="response-pasaran" class="response"></div>
-                    <div id="log-pasaran" class="log-container"></div>
-                </div>
-
-                <!-- IQC -->
-                <div class="api-card">
-                    <h3>🖼️ IQC (Image Quote Card)</h3>
-                    <div class="form-group"><label>API Key</label><input id="apikey-iqc" value="saurusdev"></div>
-                    <div class="form-group"><label>Waktu (HH:MM)</label><input id="time-iqc" placeholder="13:20"></div>
-                    <div class="form-group"><label>Baterai (%)</label><input id="battery-iqc" placeholder="85"></div>
-                    <div class="form-group"><label>Pesan</label><input id="message-iqc" placeholder="Halo dunia!"></div>
-                    <button class="btn" onclick="tryIQC()">Generate Gambar</button>
-                    <div id="response-iqc" class="response"></div>
-                    <div id="log-iqc" class="log-container"></div>
-                </div>
-
-                <!-- Cari Grup WA -->
-                <div class="api-card">
-                    <h3>💬 Cari Grup WhatsApp</h3>
-                    <div class="form-group"><label>API Key</label><input id="apikey-grupwa" value="saurusdev"></div>
-                    <div class="form-group"><label>Query</label><input id="query-grupwa" placeholder="jb, ml, ff"></div>
-                    <button class="btn" onclick="tryGrupWA()">Coba API</button>
-                    <div id="response-grupwa" class="response"></div>
-                    <div id="log-grupwa" class="log-container"></div>
-                </div>
-
-                <!-- Anime Halal -->
-                <div class="api-card">
-                    <h3>🐱 Anime Halal</h3>
-                    <div class="form-group"><label>API Key (opsional)</label><input id="apikey-anime" value="saurusdev"></div>
-                    <button class="btn" onclick="tryAnimeHalal()">Generate Anime</button>
-                    <div id="response-anime" class="response"></div>
-                    <div id="log-anime" class="log-container"></div>
-                </div>
-
+            <!-- Cek Nama Pasaran -->
+            <div class="api-card">
+                <h3>🔥 Cek Nama Pasaran</h3>
+                <div class="form-group"><label>API Key</label><input type="text" id="apikey-pasaran" value="saurusdev"></div>
+                <div class="form-group"><label>Nama</label><input type="text" id="nama-pasaran" placeholder="Masukkan nama..."></div>
+                <button class="btn" onclick="tryApi('pasaran')">Coba API</button>
+                <div id="response-pasaran" class="response"></div>
             </div>
+
+            <!-- IQC -->
+            <div class="api-card">
+                <h3>🖼️ IQC (Image Quote Card)</h3>
+                <div class="form-group"><label>API Key</label><input type="text" id="apikey-iqc" value="saurusdev"></div>
+                <div class="form-group"><label>Waktu (HH:MM)</label><input type="text" id="time-iqc" placeholder="13:20"></div>
+                <div class="form-group"><label>Baterai (%)</label><input type="text" id="battery-iqc" placeholder="85"></div>
+                <div class="form-group"><label>Pesan</label><input type="text" id="message-iqc" placeholder="Assalamualaikum..."></div>
+                <button class="btn" onclick="tryApi('iqc')">Generate Image</button>
+                <div id="response-iqc" class="response"></div>
+            </div>
+
+            <!-- Cari Grup WA -->
+            <div class="api-card">
+                <h3>💬 Cari Grup WA</h3>
+                <div class="form-group"><label>API Key</label><input type="text" id="apikey-grupwa" value="saurusdev"></div>
+                <div class="form-group"><label>Keyword</label><input type="text" id="query-grupwa" placeholder="dakwah, anime halal"></div>
+                <button class="btn" onclick="tryApi('grupwa')">Cari Grup</button>
+                <div id="response-grupwa" class="response"></div>
+            </div>
+
+            <!-- ANIME HALAL - TANPA APA-APA -->
+            <div class="api-card">
+                <h3>✨ Anime Halal Checker</h3>
+                <p style="margin:12px 0; opacity:0.9;">Langsung generate gambar status anime halal (tanpa nama anime / parameter)</p>
+                <button class="btn" onclick="tryApi('animehalal')">Generate Gambar Halal</button>
+                <div id="response-animehalal" class="response"></div>
+            </div>
+
         </div>
-    </section>
+    </div>
+</section>
 
-    <script>
-        // Bintang background
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            for (let i = 0; i < 180; i++) {
-                const star = document.createElement('div');
-                star.classList.add('star');
-                const size = Math.random() * 3 + 1;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.animationDelay = `${Math.random() * 5}s`;
-                starsContainer.appendChild(star);
-            }
-        }
-        createStars();
+<script>
+// Bintang background
+function createStars() {
+    const container = document.getElementById('stars');
+    for(let i=0; i<180; i++){
+        const star = document.createElement('div');
+        star.className='star';
+        const size = Math.random()*2.5 + 0.8;
+        star.style.width = star.style.height = size+'px';
+        star.style.left = Math.random()*100 + '%';
+        star.style.top = Math.random()*100 + '%';
+        star.style.animationDelay = Math.random()*5 + 's';
+        container.appendChild(star);
+    }
+}
+createStars();
 
-        function startDashboard() {
-            document.getElementById('landing').style.display = 'none';
-            document.getElementById('dashboard').style.display = 'block';
-            window.scrollTo(0, 0);
-        }
+// Proxy untuk JSON API
+// PROXY LIST 2026 - 10 yang paling sering work (free tier / dev usage)
+const PROXY_LIST = [
+    'https://api.allorigins.win/raw?url=',                // sangat stabil, format raw
+    'https://api.codetabs.com/v1/proxy?quest=',           // limit 5MB, tapi reliable
+    'https://cors.lol/',                                  // simple, open-source vibe
+    'https://cors-anywhere.herokuapp.com/',               // classic, kadang perlu request dulu buat unlock
+    'https://thingproxy.freeboard.io/fetch/',             // bagus untuk small request
+    'https://corsproxy.io/?',                             // masih work tapi kadang limit text-only
+    'https://api.proxy.now.sh/',                          // alternatif baru-ish
+    'https://crossorigin.me/',                            // old school, kadang 413 untuk file besar
+    'https://corsfix.com/proxy/',                         // free tier dev, cukup bagus
+    'https://proxy.cors.sh/'                              // salah satu yang disebut work di beberapa list baru
+];
 
-        // Fungsi umum untuk log ke console + tampil di halaman
-        function logToConsoleAndPage(message, logElementId) {
-            console.log(message);
-            const logDiv = document.getElementById(logElementId);
-            logDiv.innerHTML = `<strong>Console Log:</strong><br><pre>${message}</pre>` +
-                               '<button onclick="copyLog(this)">Copy Log</button>';
-        }
+async function fetchWithProxy(targetUrl) {
+    for (const proxy of PROXY_LIST) {
+        try {
+            const url = proxy + encodeURIComponent(targetUrl);
+            const res = await fetch(url, { cache:'no-cache' });
+            if (res.ok) return await res.json();
+        } catch (e) {}
+    }
+    throw new Error('Semua proxy gagal.');
+}
 
-        function copyLog(btn) {
-            const text = btn.parentElement.querySelector('pre').innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                btn.innerText = 'Copied!';
-                setTimeout(() => btn.innerText = 'Copy Log', 2000);
-            });
-        }
+// Start
+function startDashboard() {
+    document.getElementById('landing').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+}
 
-        // Cek Waktu
-        async function tryCekWaktu() {
-            const div = document.getElementById('response-cekwaktu');
-            div.innerHTML = 'Loading...';
-            try {
-                const res = await fetch('https://apisaurus.vercel.app/api/cekwaktu');
-                const data = await res.json();
-                div.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
-                logToConsoleAndPage('Success Cek Waktu: ' + JSON.stringify(data, null, 2), 'log-cekwaktu');
-            } catch (err) {
-                div.innerHTML = 'Error: ' + err.message;
-                logToConsoleAndPage('Error Cek Waktu: ' + err.message, 'log-cekwaktu');
-            }
-        }
+// API Handler
+async function tryApi(type) {
+    let responseDiv, targetUrl, loadingText = 'Loading...';
 
-        // Cek Nama Pasaran
-        async function tryCekNamaPasaran() {
-            const apikey = document.getElementById('apikey-pasaran').value.trim();
+    switch(type) {
+        case 'cekwaktu':
+            responseDiv = document.getElementById('response-cekwaktu');
+            targetUrl = 'https://apisaurus.vercel.app/api/cekwaktu';
+            break;
+
+        case 'pasaran':
+            const apikeyP = document.getElementById('apikey-pasaran').value.trim();
             const nama = document.getElementById('nama-pasaran').value.trim();
-            const div = document.getElementById('response-pasaran');
+            if (!nama) return alert('Masukkan nama!');
+            responseDiv = document.getElementById('response-pasaran');
+            targetUrl = `https://apisaurus.vercel.app/api/random/ceknamapasaran?apikey=${apikeyP}&nama=${encodeURIComponent(nama)}`;
+            break;
 
-            if (!nama) {
-                div.innerHTML = '⚠️ Isi nama terlebih dahulu!';
-                return;
-            }
-
-            div.innerHTML = 'Loading...';
-
-            const url = `https://apisaurus.vercel.app/api/random/ceknamapasaran?apikey=${apikey}&nama=${encodeURIComponent(nama)}`;
-
-            try {
-                const res = await fetch(url);
-                const data = await res.json();
-                div.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
-                logToConsoleAndPage('Success Pasaran: ' + JSON.stringify(data, null, 2), 'log-pasaran');
-            } catch (err) {
-                div.innerHTML = 'Error: ' + err.message;
-                logToConsoleAndPage('Error Pasaran: ' + err.message + '\nURL: ' + url, 'log-pasaran');
-            }
-        }
-
-        // IQC
-        function tryIQC() {
-            const apikey = document.getElementById('apikey-iqc').value.trim();
+        case 'iqc':
+            const apikeyI = document.getElementById('apikey-iqc').value.trim();
             const time = document.getElementById('time-iqc').value.trim();
             const battery = document.getElementById('battery-iqc').value.trim();
             const message = document.getElementById('message-iqc').value.trim();
-            const div = document.getElementById('response-iqc');
+            if (!time || !battery || !message) return alert('Isi semua field!');
+            responseDiv = document.getElementById('response-iqc');
+            const imgUrl = `https://apisaurus.vercel.app/api/iqc?apikey=${apikeyI}&time=${time}&battery=${battery}&message=${encodeURIComponent(message)}`;
+            responseDiv.innerHTML = `<div class="loading">${loadingText}</div><br><img src="${imgUrl}" alt="IQC" onload="this.previousElementSibling.remove()">`;
+            return;
 
-            if (!time || !battery || !message) {
-                div.innerHTML = '⚠️ Lengkapi semua field!';
-                return;
-            }
-
-            const url = `https://apisaurus.vercel.app/api/iqc?apikey=${apikey}&time=${time}&battery=${battery}&message=${encodeURIComponent(message)}`;
-
-            div.innerHTML = `<img src="${url}" alt="IQC Image" onerror="this.outerHTML='<p>Gagal load gambar</p>'">`;
-            logToConsoleAndPage('IQC requested: ' + url, 'log-iqc');
-        }
-
-        // Grup WA
-        async function tryGrupWA() {
-            const apikey = document.getElementById('apikey-grupwa').value.trim();
+        case 'grupwa':
+            const apikeyG = document.getElementById('apikey-grupwa').value.trim();
             const query = document.getElementById('query-grupwa').value.trim();
-            const div = document.getElementById('response-grupwa');
+            if (!query) return alert('Masukkan keyword!');
+            responseDiv = document.getElementById('response-grupwa');
+            targetUrl = `https://apisaurus.vercel.app/api/grupwa?apikey=${apikeyG}&query=${encodeURIComponent(query)}`;
+            break;
 
-            if (!query) {
-                div.innerHTML = '⚠️ Isi query pencarian!';
-                return;
-            }
+        case 'animehalal':
+            responseDiv = document.getElementById('response-animehalal');
+            // Endpoint final: tanpa parameter sama sekali
+            const animeUrl = 'https://apisaurus.vercel.app/api/animehalal';
+            responseDiv.innerHTML = `<div class="loading">Generating Anime Halal Image...</div><br><img src="${animeUrl}" alt="Anime Halal Result" onload="this.previousElementSibling.remove()" onerror="this.parentNode.innerHTML='<div style=\'color:#ff6b6b;\'>Error: Gambar gagal dimuat<br>Endpoint mungkin butuh parameter atau sedang error (status 415)</div>'">`;
+            return;
+    }
 
-            div.innerHTML = 'Loading...';
-
-            const url = `https://apisaurus.vercel.app/api/grupwa?apikey=${apikey}&query=${encodeURIComponent(query)}`;
-
-            try {
-                const res = await fetch(url);
-                const data = await res.json();
-                div.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
-                logToConsoleAndPage('Success Grup WA: ' + JSON.stringify(data, null, 2), 'log-grupwa');
-            } catch (err) {
-                div.innerHTML = 'Error: ' + err.message;
-                logToConsoleAndPage('Error Grup WA: ' + err.message + '\nURL: ' + url, 'log-grupwa');
-            }
+    // JSON API handler
+    if (targetUrl) {
+        responseDiv.innerHTML = `<div class="loading">${loadingText} (mencoba proxy...)</div>`;
+        try {
+            const data = await fetchWithProxy(targetUrl);
+            responseDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        } catch (err) {
+            responseDiv.innerHTML = 'Error: ' + err.message;
         }
-
-        // Anime Halal
-        function tryAnimeHalal() {
-            const apikey = document.getElementById('apikey-anime').value.trim();
-            const div = document.getElementById('response-anime');
-            let url = 'https://apisaurus.vercel.app/api/animehalal';
-            if (apikey) url += `?apikey=${apikey}`;
-
-            div.innerHTML = `<img src="${url}" alt="Anime Halal" onerror="this.outerHTML='<p>Gagal load gambar</p>'">`;
-            logToConsoleAndPage('Anime Halal requested: ' + url, 'log-anime');
-        }
-    </script>
+    }
+}
+</script>
 </body>
 </html>
