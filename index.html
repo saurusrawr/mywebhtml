@@ -37,160 +37,76 @@
             z-index: -2;
         }
 
-        .fog {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.4));
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.7;
-        }
+        .fog { position: fixed; inset: 0; background: linear-gradient(transparent, rgba(0,0,0,0.4)); pointer-events: none; z-index: -1; opacity: 0.7; }
 
         .leaf {
             position: absolute;
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             background: url('https://img.icons8.com/emoji/96/000000/leaf-fluttering-in-wind.png') no-repeat center/contain;
             opacity: 0.3;
             animation: float 20s infinite linear;
         }
 
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); }
-            100% { transform: translateY(-100px) rotate(360deg); }
-        }
+        @keyframes float { 0% { transform: translateY(100vh) rotate(0deg); } 100% { transform: translateY(-100px) rotate(360deg); } }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 15px; position: relative; z-index: 1; }
 
-        /* Landing */
         #landing { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        #landing h1 {
-            font-family: 'Creepster', cursive;
-            font-size: clamp(3.5rem, 10vw, 6rem);
-            color: var(--accent);
-            text-shadow: 3px 3px 0 #000;
-        }
+        #landing h1 { font-family: 'Creepster', cursive; font-size: clamp(3.5rem, 10vw, 6rem); color: var(--accent); text-shadow: 3px 3px 0 #000; }
         .subtitle { font-size: clamp(1.2rem, 5vw, 1.8rem); color: var(--text); text-shadow: 2px 2px 4px #000; }
 
         .btn-big {
-            padding: 15px 50px;
-            font-size: clamp(1.2rem, 5vw, 1.6rem);
-            background: linear-gradient(45deg, #ffcc00, #ff9900);
-            color: #000;
-            border: 4px solid #000;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: var(--glow);
-            transition: all 0.3s;
+            padding: 15px 50px; font-size: clamp(1.2rem, 5vw, 1.6rem);
+            background: linear-gradient(45deg, #ffcc00, #ff9900); color: #000; border: 4px solid #000;
+            border-radius: 12px; cursor: pointer; font-weight: bold; box-shadow: var(--glow); transition: all 0.3s;
         }
         .btn-big:hover { transform: scale(1.1); box-shadow: 0 0 30px #ffcc00; }
 
-        /* Dashboard */
         #dashboard { display: none; padding: 40px 0; }
-        .header h2 {
-            font-family: 'Creepster', cursive;
-            font-size: clamp(3rem, 8vw, 4.5rem);
-            color: var(--accent);
-            text-shadow: 4px 4px 0 #000;
-            text-align: center;
-            margin-bottom: 40px;
-        }
+        .header h2 { font-family: 'Creepster', cursive; font-size: clamp(3rem, 8vw, 4.5rem); color: var(--accent); text-shadow: 4px 4px 0 #000; text-align: center; margin-bottom: 40px; }
 
-        .api-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-        }
+        .api-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
 
         .api-card {
-            background: rgba(26,60,26,0.85);
-            border: 3px solid #ffcc00;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8);
-            transition: all 0.3s;
+            background: rgba(26,60,26,0.85); border: 3px solid #ffcc00; border-radius: 16px; padding: 25px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8); transition: all 0.3s;
         }
-
         .api-card:hover { transform: translateY(-8px); box-shadow: 0 0 40px #ffcc00; }
 
-        .api-card h3 {
-            font-family: 'Orbitron', sans-serif;
-            color: #ffcc00;
-            font-size: 1.8rem;
-            margin-bottom: 12px;
-            text-shadow: 2px 2px 4px #000;
-        }
+        .api-card h3 { font-family: 'Orbitron', sans-serif; color: #ffcc00; font-size: 1.8rem; margin-bottom: 12px; text-shadow: 2px 2px 4px #000; }
 
         .api-link {
-            background: rgba(0,0,0,0.6);
-            padding: 10px;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 0.9rem;
-            color: #90ee90;
-            word-break: break-all;
-            margin: 12px 0;
-            display: block;
-            text-decoration: none;
+            background: rgba(0,0,0,0.6); padding: 10px; border-radius: 8px; font-family: monospace; font-size: 0.9rem;
+            color: #90ee90; word-break: break-all; margin: 12px 0 20px 0; display: block; text-decoration: none;
         }
-
         .api-link:hover { color: #ffcc00; }
 
         .form-group { margin: 12px 0; }
         .form-group label { display: block; margin-bottom: 6px; color: #ffcc00; font-weight: 600; font-size: 0.95rem; }
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 2px solid #ffcc00;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            font-size: 0.95rem;
-        }
+        .form-group input { width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #ffcc00; background: rgba(0,0,0,0.5); color: white; font-size: 0.95rem; }
 
         .btn {
-            padding: 10px 25px;
-            background: #ffcc00;
-            color: #000;
-            border: 3px solid #000;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-            width: 100%;
-            margin-top: 10px;
+            padding: 10px 25px; background: #ffcc00; color: #000; border: 3px solid #000; border-radius: 10px;
+            cursor: pointer; font-weight: bold; transition: all 0.3s; width: 100%; margin-top: 10px;
         }
         .btn:hover { background: #ff9900; transform: scale(1.03); }
         .btn:disabled { background: #555; cursor: not-allowed; opacity: 0.7; }
 
-        .response {
-            margin-top: 15px;
-            padding: 12px;
-            background: rgba(0,0,0,0.7);
-            border-radius: 10px;
-            font-family: monospace;
-            white-space: pre-wrap;
-            max-height: 280px;
-            overflow-y: auto;
-            border: 2px solid #90ee90;
-            font-size: 0.9rem;
-        }
-
+        .response { margin-top: 15px; padding: 12px; background: rgba(0,0,0,0.7); border-radius: 10px; font-family: monospace; white-space: pre-wrap; max-height: 280px; overflow-y: auto; border: 2px solid #90ee90; font-size: 0.9rem; }
         .response img { max-width: 100%; border-radius: 8px; margin-top: 8px; }
 
         .error-msg { 
             color: #ff4444; 
             font-weight: bold; 
-            margin: 10px 0; 
-            font-size: 1rem; 
+            margin: 15px 0; 
+            font-size: 1.1rem; 
             text-align: center; 
+            background: rgba(255,0,0,0.15); 
+            padding: 10px; 
+            border-radius: 8px; 
         }
 
-        @media (max-width: 600px) {
-            .api-card { padding: 20px; }
-            .btn-big { padding: 12px 40px; font-size: 1.4rem; }
-        }
+        @media (max-width: 600px) { .api-card { padding: 20px; } }
     </style>
 </head>
 <body>
@@ -207,27 +123,25 @@
         }
     </script>
 
-    <!-- Landing -->
     <section id="landing">
         <div class="container">
-            <h1>JURASSIC API</h1>
-            <p class="subtitle">Saurus Park - API Purba & Berbahaya</p>
-            <button class="btn-big" onclick="startDashboard()">ENTER THE PARK</button>
+            <h1>SAURUS API</h1>
+            <p class="subtitle">Saurus Api - API Terbaru 2026</p>
+            <button class="btn-big" onclick="startDashboard()">COBA API</button>
         </div>
     </section>
 
-    <!-- Dashboard -->
     <section id="dashboard">
         <div class="container">
             <div class="header">
-                <h2>WELCOME TO SAURUS PARK</h2>
+                <h2>WELCOME TO LIST API BY SAURUS</h2>
             </div>
 
             <div class="api-grid">
 
                 <!-- Cek Waktu -->
                 <div class="api-card">
-                    <h3>🦖 Cek Waktu Purba</h3>
+                    <h3>🦖 Cek Waktu WIB,WITA,WIT</h3>
                     <a href="https://apisaurus.vercel.app/api/cekwaktu" target="_blank" class="api-link">https://apisaurus.vercel.app/api/cekwaktu</a>
                     <button class="btn" onclick="tryApi('cekwaktu')">Coba API</button>
                     <div id="response-cekwaktu" class="response"></div>
@@ -255,22 +169,23 @@
                     <div id="response-iqc" class="response"></div>
                 </div>
 
-                <!-- Cari Grup WA (Error) -->
+                <!-- Cari Grup WA (Sedang Error) -->
                 <div class="api-card">
                     <h3>🦖 Cari Grup WA</h3>
                     <a href="https://apisaurus.vercel.app/api/grupwa?apikey=saurusdev&query=jb" target="_blank" class="api-link">https://apisaurus.vercel.app/api/grupwa</a>
-                    <p class="error-msg">⚠️ API sedang error / maintenance<br>Saat ini tidak bisa dicoba</p>
+                    <p class="error-msg">⚠️ API INI SEDANG ERROR / DALAM PERBAIKAN<br>Tidak bisa dicoba sementara waktu. Mohon bersabar seperti dinosaurus yang menunggu zaman baru! 🦕</p>
                     <div class="form-group"><label>API Key</label><input type="text" id="apikey-grupwa" value="saurusdev" disabled></div>
                     <div class="form-group"><label>Keyword</label><input type="text" id="query-grupwa" placeholder="jb, ml, ff" disabled></div>
                     <button class="btn" disabled>Coba API (Sedang Error)</button>
-                    <div id="response-grupwa" class="response"><div class="error-msg">API ini sedang tidak bisa digunakan</div></div>
+                    <div id="response-grupwa" class="response"></div>
                 </div>
 
-                <!-- Anime Halal -->
+                <!-- Random Anime Halal -->
                 <div class="api-card">
-                    <h3>🦕 Anime Halal Checker</h3>
+                    <h3>🦕 Random Anime Halal</h3>
                     <a href="https://apisaurus.vercel.app/api/animehalal" target="_blank" class="api-link">https://apisaurus.vercel.app/api/animehalal</a>
-                    <button class="btn" onclick="tryApi('animehalal')">Generate Gambar Halal</button>
+                    <p style="margin:10px 0; font-size:0.95rem; opacity:0.9;">Generate gambar random anime yang halal</p>
+                    <button class="btn" onclick="tryApi('animehalal')">Generate Random</button>
                     <div id="response-animehalal" class="response"></div>
                 </div>
 
@@ -279,6 +194,25 @@
     </section>
 
     <script>
+        // Proxy CORS (untuk API lain yang masih work)
+        const PROXY_LIST = [
+            'https://api.allorigins.win/raw?url=',
+            'https://api.codetabs.com/v1/proxy?quest=',
+            'https://corsproxy.io/?',
+            'https://thingproxy.freeboard.io/fetch/'
+        ];
+
+        async function fetchWithProxy(targetUrl) {
+            for (const proxy of PROXY_LIST) {
+                try {
+                    const url = proxy + encodeURIComponent(targetUrl);
+                    const res = await fetch(url, { cache: 'no-cache' });
+                    if (res.ok) return await res.json();
+                } catch (e) {}
+            }
+            throw new Error('Semua proxy gagal. Coba lagi nanti.');
+        }
+
         function startDashboard() {
             document.getElementById('landing').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
@@ -309,8 +243,7 @@
                     targetUrl = `https://apisaurus.vercel.app/api/random/ceknamapasaran?apikey=${apikeyP}&nama=${encodeURIComponent(nama)}`;
                     responseDiv.innerHTML = 'Loading...';
                     try {
-                        const res = await fetch(targetUrl);
-                        const data = await res.json();
+                        const data = await fetchWithProxy(targetUrl);
                         responseDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
                     } catch (err) {
                         responseDiv.innerHTML = 'Error: ' + err.message;
@@ -331,7 +264,7 @@
                 case 'animehalal':
                     responseDiv = document.getElementById('response-animehalal');
                     const animeUrl = 'https://apisaurus.vercel.app/api/animehalal';
-                    responseDiv.innerHTML = `<img src="${animeUrl}" alt="Anime Halal" style="max-width:100%;">`;
+                    responseDiv.innerHTML = `<img src="${animeUrl}" alt="Random Anime Halal" style="max-width:100%;">`;
                     break;
             }
         }
