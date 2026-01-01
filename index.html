@@ -3,103 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apisaurus - Dashboard API</title>
+    <title>Apisaurus API Documentation</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
         :root {
-            --primary: #7B2CBF; --accent: #9D4EDD; --light: #E0AAFF;
-            --bg: linear-gradient(135deg, #240046 0%, #3C096C 50%, #7B2CBF 100%);
+            --primary: #7B2CBF;
+            --accent: #9D4EDD;
+            --light: #E0AAFF;
+            --bg-gradient: linear-gradient(135deg, #240046 0%, #3C096C 50%, #7B2CBF 100%);
         }
-        body { background: var(--bg); color: white; min-height: 100vh; font-family: 'Poppins', sans-serif; margin:0; background-attachment: fixed; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
-        #landing { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        #landing h1 { font-size: 4.5rem; background: linear-gradient(90deg, #E0AAFF, white); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        .btn-start { padding: 16px 50px; font-size: 1.5rem; background: var(--accent); border: none; border-radius: 50px; color: white; cursor: pointer; box-shadow: 0 10px 30px rgba(157,78,221,0.5); transition: all 0.3s; }
-        .btn-start:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(157,78,221,0.7); }
-        #dashboard { display: none; padding: 40px 0; }
-        .header { text-align: center; margin-bottom: 50px; }
-        .header h2 { font-size: 3rem; margin: 0; }
-        .api-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 25px; }
-        .api-card { background: rgba(255,255,255,0.07); backdrop-filter: blur(12px); border-radius: 20px; padding: 25px; border: 1px solid rgba(157,78,221,0.25); transition: all 0.3s; }
-        .api-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(123,44,191,0.35); }
-        .api-card h3 { color: var(--light); margin: 0 0 15px; font-size: 1.6rem; }
-        .form-group { margin: 12px 0; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; }
-        .form-group input { width: 100%; padding: 12px; border-radius: 10px; border: none; background: rgba(255,255,255,0.12); color: white; font-size: 1rem; }
-        .btn { padding: 10px 24px; background: var(--accent); color: white; border: none; border-radius: 10px; cursor: pointer; margin-top: 10px; transition: all 0.3s; }
-        .btn:hover { background: #a166f0; transform: scale(1.03); }
-        .response { margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.35); border-radius: 12px; max-height: 350px; overflow-y: auto; font-family: monospace; white-space: pre-wrap; }
-        .response img { max-width: 100%; border-radius: 10px; display: block; margin-top: 10px; }
-        .stars { position: fixed; inset: 0; pointer-events: none; z-index: -1; }
-        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.7; animation: twinkle 6s infinite alternate; }
-        @keyframes twinkle { from {opacity:0.4} to {opacity:0.9} }
+
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', sans-serif; }
+
+        body { background: var(--bg-gradient); color: white; min-height: 100vh; background-attachment: fixed; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        #landing { height: 100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; animation: fadeIn 1.5s; }
+        #landing h1 { font-size:4rem; background: linear-gradient(90deg, #E0AAFF, white); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .btn-start { padding:15px 40px; font-size:1.4rem; background:var(--accent); border:none; border-radius:50px; color:white; cursor:pointer; box-shadow:0 10px 30px rgba(157,78,221,0.4); transition:all .3s; }
+        .btn-start:hover { transform:translateY(-5px); box-shadow:0 15px 40px rgba(157,78,221,0.6); }
+
+        #dashboard { display:none; min-height:100vh; padding-top:50px; }
+        .header { text-align:center; margin-bottom:60px; }
+        .api-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(350px, 1fr)); gap:30px; }
+        .api-card { background:rgba(255,255,255,0.08); backdrop-filter:blur(10px); border-radius:20px; padding:30px; border:1px solid rgba(157,78,221,0.3); transition:all .3s; }
+        .api-card:hover { transform:translateY(-10px); box-shadow:0 20px 40px rgba(123,44,191,0.3); }
+        .api-card h3 { font-size:1.8rem; color:var(--light); margin-bottom:15px; }
+        .btn { padding:10px 20px; background:var(--accent); color:white; border:none; border-radius:10px; cursor:pointer; transition:all .3s; }
+        .btn:hover { background:#a166f0; transform:scale(1.05); }
+        .form-group { margin:15px 0; }
+        .form-group label { display:block; margin-bottom:8px; }
+        .form-group input { width:100%; padding:12px; border-radius:10px; border:none; background:rgba(255,255,255,0.1); color:white; }
+        .response { margin-top:20px; padding:15px; background:rgba(0,0,0,0.3); border-radius:12px; max-height:300px; overflow-y:auto; font-family:monospace; white-space:pre-wrap; }
+        .response img { max-width:100%; border-radius:10px; margin-top:10px; }
+
+        .stars { position:fixed; inset:0; pointer-events:none; z-index:-1; }
+        .star { position:absolute; background:white; border-radius:50%; opacity:0.8; animation:twinkle 5s infinite alternate; }
+        @keyframes twinkle { from {opacity:0.3} to {opacity:0.9} }
+        @keyframes fadeIn { from {opacity:0; transform:translateY(30px)} to {opacity:1; transform:translateY(0)} }
     </style>
 </head>
 <body>
 
 <div class="stars" id="stars"></div>
 
-<!-- Landing Page -->
 <section id="landing">
     <div class="container">
-        <p style="font-size:1.4rem; opacity:0.9;">Author: Saurus</p>
-        <p style="font-size:1.3rem; opacity:0.8; margin:10px 0 30px;">Total API: 5</p>
+        <p class="author">Author: Saurus</p>
+        <p class="total-api">Total API: 5</p>
         <h1>Apisaurus</h1>
-        <button class="btn-start" onclick="document.getElementById('landing').style.display='none'; document.getElementById('dashboard').style.display='block'; window.scrollTo(0,0);">Let's Get Started</button>
+        <button class="btn-start" onclick="document.getElementById('landing').style.display='none'; document.getElementById('dashboard').style.display='block';">Let's Get Started</button>
     </div>
 </section>
 
-<!-- Dashboard -->
 <section id="dashboard">
     <div class="container">
         <div class="header">
-            <h2>API Dashboard</h2>
-            <p style="opacity:0.8; margin-top:10px;">Semua fitur menggunakan proxy CORS untuk keamanan browser</p>
+            <h2>Dashboard API</h2>
+            <p>Semua request melalui proxy aman (API key tersembunyi)</p>
         </div>
 
         <div class="api-grid">
 
             <!-- Cek Waktu -->
             <div class="api-card">
-                <h3>🕒 Cek Waktu</h3>
-                <button class="btn" onclick="tryApi('cekwaktu')">Coba Sekarang</button>
+                <h3>🕐 Cek Waktu</h3>
+                <button class="btn" onclick="tryApi('https://apisaurus.vercel.app/api/cekwaktu')">Coba API</button>
                 <div id="res-cekwaktu" class="response"></div>
             </div>
 
             <!-- Cek Nama Pasaran -->
             <div class="api-card">
                 <h3>🔥 Cek Nama Pasaran</h3>
-                <div class="form-group"><label>API Key</label><input id="key-pasaran" value="saurusdev"></div>
-                <div class="form-group"><label>Nama</label><input id="nama-pasaran" placeholder="contoh: rizal"></div>
-                <button class="btn" onclick="tryApi('pasaran')">Coba Sekarang</button>
+                <div class="form-group"><label>Nama</label><input id="nama-pasaran" placeholder="Masukkan nama"></div>
+                <button class="btn" onclick="tryApi(`https://apisaurus.vercel.app/api/random/ceknamapasaran?nama=${encodeURIComponent(document.getElementById('nama-pasaran').value || 'test')}`)">Coba API</button>
                 <div id="res-pasaran" class="response"></div>
             </div>
 
             <!-- IQC -->
             <div class="api-card">
-                <h3>🖼️ IQC (Image Quote)</h3>
-                <div class="form-group"><label>API Key</label><input id="key-iqc" value="saurusdev"></div>
-                <div class="form-group"><label>Waktu (HH:MM)</label><input id="time-iqc" placeholder="13:45"></div>
-                <div class="form-group"><label>Baterai (%)</label><input id="bat-iqc" placeholder="78"></div>
-                <div class="form-group"><label>Pesan</label><input id="msg-iqc" placeholder="Selamat malam!"></div>
-                <button class="btn" onclick="tryApi('iqc')">Generate Gambar</button>
+                <h3>🖼️ IQC</h3>
+                <div class="form-group"><label>Waktu (HH:MM)</label><input id="time-iqc" placeholder="13:20"></div>
+                <div class="form-group"><label>Baterai</label><input id="bat-iqc" placeholder="85"></div>
+                <div class="form-group"><label>Pesan</label><input id="msg-iqc" placeholder="Halo!"></div>
+                <button class="btn" onclick="tryImageApi(`https://apisaurus.vercel.app/api/iqc?time=${document.getElementById('time-iqc').value || '13:20'}&battery=${document.getElementById('bat-iqc').value || '85'}&message=${encodeURIComponent(document.getElementById('msg-iqc').value || 'Test')}`)">Generate</button>
                 <div id="res-iqc" class="response"></div>
             </div>
 
             <!-- Grup WA -->
             <div class="api-card">
                 <h3>💬 Cari Grup WA</h3>
-                <div class="form-group"><label>API Key</label><input id="key-grup" value="saurusdev"></div>
-                <div class="form-group"><label>Keyword</label><input id="query-grup" placeholder="contoh: ml, ff, jb"></div>
-                <button class="btn" onclick="tryApi('grupwa')">Cari Grup</button>
+                <div class="form-group"><label>Query</label><input id="query-grup" placeholder="jb, ml, ff"></div>
+                <button class="btn" onclick="tryApi(`https://apisaurus.vercel.app/api/grupwa?query=${encodeURIComponent(document.getElementById('query-grup').value || 'test')}`)">Cari</button>
                 <div id="res-grup" class="response"></div>
             </div>
 
             <!-- Anime Halal -->
             <div class="api-card">
                 <h3>🐱 Anime Halal</h3>
-                <div class="form-group"><label>API Key (opsional)</label><input id="key-anime" value="saurusdev" placeholder="kosongkan jika tidak perlu"></div>
-                <button class="btn" onclick="tryApi('animehalal')">Generate Anime</button>
+                <button class="btn" onclick="tryImageApi('https://apisaurus.vercel.app/api/animehalal')">Generate</button>
                 <div id="res-anime" class="response"></div>
             </div>
 
@@ -108,79 +112,42 @@
 </section>
 
 <script>
-const PROXY = 'https://corsproxy.io/?'; // proxy stabil untuk bypass CORS
+    const PROXY_BASE = '/api/proxy?url='; // Ganti kalau deploy di tempat lain
 
-async function tryApi(type) {
-    const proxyUrl = url => PROXY + encodeURIComponent(url);
-    let resDiv, url;
+    function createStars() {
+        const stars = document.getElementById('stars');
+        for(let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = star.style.height = Math.random() * 3 + 1 + 'px';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 5 + 's';
+            stars.appendChild(star);
+        }
+    }
+    createStars();
 
-    if (type === 'cekwaktu') {
-        resDiv = document.getElementById('res-cekwaktu');
-        url = 'https://apisaurus.vercel.app/api/cekwaktu';
-        resDiv.innerHTML = 'Memuat...';
-        fetchJson(proxyUrl(url), resDiv);
+    async function tryApi(targetUrl) {
+        const resDiv = event.target.closest('.api-card').querySelector('.response');
+        resDiv.innerHTML = 'Loading...';
+
+        try {
+            const proxyUrl = PROXY_BASE + encodeURIComponent(targetUrl);
+            const res = await fetch(proxyUrl);
+            const data = await res.json();
+            resDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        } catch (err) {
+            resDiv.innerHTML = 'Error: ' + err.message;
+        }
     }
 
-    else if (type === 'pasaran') {
-        resDiv = document.getElementById('res-pasaran');
-        const key = document.getElementById('key-pasaran').value.trim();
-        const nama = document.getElementById('nama-pasaran').value.trim();
-        if (!nama) return resDiv.innerHTML = '⚠️ Nama wajib diisi!';
-        url = `https://apisaurus.vercel.app/api/random/ceknamapasaran?apikey=${key}&nama=${encodeURIComponent(nama)}`;
-        resDiv.innerHTML = 'Memuat...';
-        fetchJson(proxyUrl(url), resDiv);
+    function tryImageApi(targetUrl) {
+        const resDiv = event.target.closest('.api-card').querySelector('.response');
+        resDiv.innerHTML = 'Generating...';
+        const proxyUrl = PROXY_BASE + encodeURIComponent(targetUrl);
+        resDiv.innerHTML = `<img src="${proxyUrl}" alt="Generated Image" onerror="this.outerHTML='<p>Gagal memuat gambar</p>'">`;
     }
-
-    else if (type === 'grupwa') {
-        resDiv = document.getElementById('res-grup');
-        const key = document.getElementById('key-grup').value.trim();
-        const query = document.getElementById('query-grup').value.trim();
-        if (!query) return resDiv.innerHTML = '⚠️ Keyword wajib diisi!';
-        url = `https://apisaurus.vercel.app/api/grupwa?apikey=${key}&query=${encodeURIComponent(query)}`;
-        resDiv.innerHTML = 'Mencari...';
-        fetchJson(proxyUrl(url), resDiv);
-    }
-
-    else if (type === 'iqc') {
-        resDiv = document.getElementById('res-iqc');
-        const key = document.getElementById('key-iqc').value.trim();
-        const time = document.getElementById('time-iqc').value.trim();
-        const bat = document.getElementById('bat-iqc').value.trim();
-        const msg = document.getElementById('msg-iqc').value.trim();
-        if (!time || !bat || !msg) return resDiv.innerHTML = '⚠️ Lengkapi waktu, baterai, dan pesan!';
-        url = `https://apisaurus.vercel.app/api/iqc?apikey=${key}&time=${time}&battery=${bat}&message=${encodeURIComponent(msg)}`;
-        resDiv.innerHTML = `<img src="${url}" alt="IQC" onerror="this.replaceWith(document.createTextNode('❌ Gagal memuat gambar'))">`;
-    }
-
-    else if (type === 'animehalal') {
-        resDiv = document.getElementById('res-anime');
-        const key = document.getElementById('key-anime').value.trim();
-        url = 'https://apisaurus.vercel.app/api/animehalal' + (key ? `?apikey=${key}` : '');
-        resDiv.innerHTML = `<img src="${url}" alt="Anime Halal" onerror="this.replaceWith(document.createTextNode('❌ Gagal memuat gambar (coba tanpa API Key)'))">`;
-    }
-}
-
-async function fetchJson(url, element) {
-    try {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`Status: ${res.status}`);
-        const data = await res.json();
-        element.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
-    } catch (e) {
-        element.innerHTML = `❌ Error: ${e.message}\n(Cek input atau koneksi)`;
-    }
-}
-
-// Efek bintang
-for(let i=0; i<100; i++){
-    const s = document.createElement('div');
-    s.className='star';
-    s.style.width=s.style.height=Math.random()*3+1+'px';
-    s.style.left=Math.random()*100+'%';
-    s.style.top=Math.random()*100+'%';
-    s.style.animationDelay=Math.random()*6+'s';
-    document.getElementById('stars').appendChild(s);
-}
 </script>
 </body>
 </html>
